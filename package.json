@@ -1,7 +1,23 @@
 {
+  "name": "betterview",
+  "version": "1.0.0",
+  "description": "Video chat application with WebRTC and Socket.IO",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "echo 'Build completed'",
+    "vercel-build": "echo 'Vercel build completed'"
+  },
   "dependencies": {
     "express": "^5.1.0",
     "ngrok": "^5.0.0-beta.2",
     "socket.io": "^4.8.1"
-  }
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "keywords": ["webrtc", "video-chat", "socket.io", "express"],
+  "author": "",
+  "license": "MIT"
 }
