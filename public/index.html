@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Спільний перегляд</title>
+    <style>
+        :root {
+            --background: #18181b;
+            --surface: #27272a;
+            --primary: #6d28d9;
+            --primary-hover: #5b21b6;
+            --text: #e2e2e2;
+            --text-muted: #a1a1aa;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container { width: 95%; max-width: 1200px; }
+        #lobbyContainer { background: var(--surface); padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        #lobbyContainer h1 { margin-top: 0; }
+        input[type="text"] { width: 80%; padding: 12px; margin-bottom: 20px; border-radius: 8px; border: 1px solid #555; background: #3f3f46; color: white; font-size: 16px; }
+        button { padding: 12px 25px; font-size: 16px; margin: 5px; cursor: pointer; border-radius: 8px; border: none; background: var(--primary); color: white; transition: background-color 0.2s; font-weight: 500; }
+        button:hover { background: var(--primary-hover); }
+        
+        #videoSection { display: none; width: 100%; }
+        
+        #stream-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: black;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+        #stream-container video { width: 100%; height: 100%; object-fit: contain; }
+        
+        #local-preview {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 20%;
+            max-width: 240px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #local-preview video { width: 100%; height: 100%; object-fit: cover; }
+        
+        #controls-bar {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            box-sizing: border-box;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            z-index: 5;
+        }
+        #stream-container:hover #controls-bar {
+            opacity: 1;
+        }
+
+        /* Приховуємо курсор та UI, коли миша неактивна */
+        #stream-container.inactive {
+            cursor: none;
+        }
+        #stream-container.inactive #controls-bar,
+        #stream-container.inactive #local-preview {
+            opacity: 0;
+        }
+        
+        /* Приховуємо UI в повноекранному режимі */
+        #stream-container:fullscreen #controls-bar,
+        #stream-container:fullscreen #local-preview {
+            display: none;
+        }
+
+        #controls-bar button { background: none; font-size: 24px; padding: 5px; }
+        #statusMessage { margin-top: 15px; font-size: 18px; color: var(--text-muted); }
+        #main-controls { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="lobbyContainer">
+            <h1>Приєднатися до перегляду</h1>
+            <p>Введіть назву кімнати, щоб створити її або приєднатися до існуючої.</p>
+            <input type="text" id="roomName" placeholder="Назва кімнати..." autocomplete="off">
+            <br>
+            <button id="joinRoom">Приєднатися</button>
+        </div>
+        <div id="videoSection">
+            <h1 id="roomTitle"></h1>
+            <div id="main-controls">
+                <button id="startStream">Почати трансляцію</button>
+                <p id="statusMessage">Очікування на трансляцію...</p>
+            </div>
+            <div id="stream-container">
+                <div id="local-preview"></div>
+                <div id="controls-bar">
+                    <button id="playPauseBtn">▶️</button>
+                    <button id="muteBtn">🔊</button>
+                    <button id="fullscreenBtn">↗️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
