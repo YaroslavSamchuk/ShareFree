@@ -7,7 +7,11 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 // Налаштовуємо Express для віддачі статичних файлів з папки 'public'
-// Static file serving handled by Vercel - commented out Express static middleware
+app.use(express.static('public'));
+
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+});
 
 io.on('connection', (socket) => {
     console.log(`Новий користувач підключився: ${socket.id}`);
